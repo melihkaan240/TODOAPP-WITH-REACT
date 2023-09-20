@@ -12,6 +12,7 @@ import {
   HStack,
   InputGroup,
   VStack,
+  Image,
   InputRightElement,
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
@@ -21,7 +22,7 @@ function Main() {
   const [newTodo, setNewTodo] = useState('');
   const todoListLS = todoList;
   const addTodo = () => {
-    setTodoList(prevTodoList => [
+    setTodoList((prevTodoList) => [
       ...prevTodoList,
       {
         id: uuidv4(),
@@ -34,7 +35,8 @@ function Main() {
     localStorage.setItem('items', JSON.stringify(todoListLS));
     setNewTodo('');
   };
-  const editTodo = (id, oldTodo) => {
+ 
+   const editTodo = (id, oldTodo) => {
     setTodoList(
       prevTodoList =>
         prevTodoList.map(todoItem =>
@@ -79,12 +81,14 @@ function Main() {
   };
 
   //***** LOCAL STORAGE *****
+  
+   useEffect(() => {
+     const valueLS = localStorage.getItem('items');
 
-  useEffect(() => {
-    const valueLS = localStorage.getItem('items');
-
-    setTodoList(JSON.parse(valueLS));
-  }, []);
+     if (valueLS!==null) {
+      setTodoList(JSON.parse(valueLS));
+     }
+   }, []);
 
   const localSaved = () => {
     localStorage.setItem('items', JSON.stringify(todoListLS));
@@ -95,6 +99,7 @@ function Main() {
     <Box
       bgImage={'wallpaper.jpg '}
       bgSize={'cover'}
+      bgPosition="center"
       width={'100vw'}
       height={'100vh'}
     >
@@ -152,8 +157,7 @@ function Main() {
         {/* YAPILACAKLAR LİSTESİ */}
         <Box w={'80vw'} h={'25vh'} display={'flex'} boxShadow="sm">
           <VStack spacing={5} overflowY={'auto'}>
-            {todoList
-              .filter(i => i.isCompleted === false)
+            {todoList?.filter(i => i.isCompleted === false)
               .map((todoItem, index) => (
                 <ToDo
                   key={index}
@@ -187,8 +191,7 @@ function Main() {
         {/* YAPILDI LİSTESİ */}
         <Box w={'80vw'} h={'25vh'} display={'flex'} boxShadow={'sm'}>
           <VStack spacing={5} overflowY={'auto'}>
-            {todoList
-              .filter(i => i.isCompleted === true)
+            {todoList?.filter(i => i.isCompleted === true)
               .map((todoItem, index) => (
                 <CompletedTodo
                   key={index}
